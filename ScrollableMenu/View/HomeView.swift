@@ -49,12 +49,12 @@ struct HomeView: View {
                             ForEach(tabsItems){ tab in
                                 VStack{
                                     Text(tab.tab)
-                                        .foregroundColor(currentTab == tab.id ? .black : .gray)
+                                        .foregroundColor(currentTab.replacingOccurrences(of: "SCROLL", with: "") == tab.id ? .blue : .gray)
                                     
                                     // For matched geometry effect...
-                                    if currentTab == tab.id{
+                                    if currentTab.replacingOccurrences(of: "SCROLL", with: "") == tab.id{
                                         Capsule()
-                                            .fill(.black)
+                                            .fill(.blue)
                                             .matchedGeometryEffect(id: "TAB", in: animation)
                                             .frame(height: 3)
                                             .padding(.horizontal, -10)
@@ -68,15 +68,23 @@ struct HomeView: View {
                                 }// VStack
                                 .onTapGesture {
                                     withAnimation(.easeInOut){
-                                        currentTab = tab.id
-                                        proxy.scrollTo(currentTab, anchor: .topTrailing)
+                                        currentTab = "\(tab.id) TAP"
+                                        proxy.scrollTo(currentTab.replacingOccurrences(of: " TAP", with: ""), anchor: .topTrailing)
                                     }
                                 }
                             }// ForEach
                         }// HStack
                         .padding(.horizontal, 30)
                     }// ScrollView
-                    
+                    .onChange(of: currentTab){ _ in
+                        
+                        // Ebabling scrolling...
+                        if currentTab.contains(" SCROLL"){
+                            withAnimation(.easeInOut){
+                                proxy.scrollTo(currentTab.replacingOccurrences(of: " SCROLL", with: ""), anchor: .topTrailing)
+                            }
+                        }
+                    }
                 }// ScrollViewReader
                 .padding(.top)
             }// VStack
@@ -103,9 +111,13 @@ struct HomeView: View {
                     }// VStack
                     .padding([.horizontal, .bottom])
                     .onChange(of: currentTab){ newValue in
-                        // Scrolling to content...
-                        withAnimation(.easeInOut){
-                            proxy.scrollTo(currentTab, anchor: .topTrailing)
+                        
+                        // avoiding scroll if its tap...
+                        if currentTab.contains(" TAP"){
+                            // Scrolling to content...
+                            withAnimation(.easeInOut){
+                                proxy.scrollTo(currentTab.replacingOccurrences(of: " TAP", with: ""), anchor: .topTrailing)
+                            }
                         }
                     }
                 }// ScrollViewRader

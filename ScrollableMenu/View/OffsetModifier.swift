@@ -34,7 +34,7 @@ struct OffsetModifier: ViewModifier {
                 // ADDING SCROLL TO LAST OF ID...
                 // TO IDENTIFY EASILY
                 withAnimation(.easeInOut){
-                    currentTab = (offset < 20 && -offset < (proxy.minX / 2) && currentTab != "\(tab.id) SCROLL") ? tab.id : currentTab
+                    currentTab = (offset < 20 && -offset < (proxy.midX / 2) && currentTab != "\(tab.id) SCROLL") ? tab.id : currentTab
                 }
             }
     }
